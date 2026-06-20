@@ -2,6 +2,8 @@ package com.codementor.backend.service;
 
 import com.codementor.backend.dto.LoginRequest;
 import com.codementor.backend.dto.LoginResponse;
+import com.codementor.backend.dto.UpdateProfileRequest;
+import com.codementor.backend.dto.UserProfileResponse;
 import com.codementor.backend.entity.User;
 import com.codementor.backend.exception.EmailAlreadyExistsException;
 import com.codementor.backend.repository.UserRepository;
@@ -70,6 +72,37 @@ public class UserService {
         return new LoginResponse(
                 "Login successful",
                 token
+        );
+    }
+
+    public UserProfileResponse getProfile(String email) {
+
+        User user = userRepository.findByEmail(email);
+
+        return new UserProfileResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
+    }
+
+    public UserProfileResponse updateProfile(
+            String currentEmail,
+            UpdateProfileRequest request) {
+
+        User user =
+                userRepository.findByEmail(currentEmail);
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        User updatedUser =
+                userRepository.save(user);
+
+        return new UserProfileResponse(
+                updatedUser.getId(),
+                updatedUser.getName(),
+                updatedUser.getEmail()
         );
     }
 }
