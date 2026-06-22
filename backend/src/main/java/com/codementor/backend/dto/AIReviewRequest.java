@@ -8,4 +8,6 @@ import lombok.Setter;
 public class AIReviewRequest {
 
     private String code;
+
+    private String language;
 }

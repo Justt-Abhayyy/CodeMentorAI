@@ -22,7 +22,8 @@ public class AIReviewController {
             @RequestBody AIReviewRequest request) {
 
         return aiReviewService.reviewCode(
-                request.getCode()
+                request.getCode(),
+                request.getLanguage()
         );
     }
 }

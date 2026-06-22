@@ -15,5 +15,7 @@ public class AIReviewResponse {
 
     private String spaceComplexity;
 
+    private String codeQuality;
+
     private List<String> suggestions;
 }
