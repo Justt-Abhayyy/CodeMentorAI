@@ -1,5 +1,6 @@
 package com.codementor.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
@@ -27,5 +28,6 @@ public class User {
 
     private String email;
 
+    @JsonIgnore
     private String password;
 }
