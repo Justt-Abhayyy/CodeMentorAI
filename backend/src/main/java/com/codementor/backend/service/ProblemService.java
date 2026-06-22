@@ -35,4 +35,30 @@ public class ProblemService {
                 .findById(id)
                 .orElse(null);
     }
+
+    public Problem updateProblem(
+            Long id,
+            Problem updatedProblem) {
+
+        Problem problem =
+                problemRepository.findById(id)
+                        .orElse(null);
+
+        if (problem == null) {
+            return null;
+        }
+
+        problem.setTitle(updatedProblem.getTitle());
+        problem.setDescription(updatedProblem.getDescription());
+        problem.setDifficulty(updatedProblem.getDifficulty());
+        problem.setTag(updatedProblem.getTag());
+
+        return problemRepository.save(problem);
+    }
+
+    public void deleteProblem(
+            Long id) {
+
+        problemRepository.deleteById(id);
+    }
 }

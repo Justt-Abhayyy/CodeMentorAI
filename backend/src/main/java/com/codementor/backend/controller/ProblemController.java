@@ -2,6 +2,7 @@ package com.codementor.backend.controller;
 
 import com.codementor.backend.entity.Problem;
 import com.codementor.backend.service.ProblemService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProblemController {
 
     @PostMapping
     public Problem createProblem(
-            @RequestBody Problem problem) {
+            @Valid @RequestBody Problem problem) {
 
         return problemService.createProblem(problem);
     }
@@ -36,5 +37,25 @@ public class ProblemController {
             @PathVariable Long id) {
 
         return problemService.getProblemById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Problem updateProblem(
+            @PathVariable Long id,
+            @Valid @RequestBody Problem problem) {
+
+        return problemService.updateProblem(
+                id,
+                problem
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteProblem(
+            @PathVariable Long id) {
+
+        problemService.deleteProblem(id);
+
+        return "Problem deleted successfully";
     }
 }
