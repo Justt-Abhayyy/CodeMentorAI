@@ -19,31 +19,47 @@ function Login() {
         "/api/users/login",
         {
           email,
-          password,
+          password
         }
       );
 
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
+    
 
-      navigate("/dashboard");
+      if (
+        response.data &&
+        response.data.token
+      ) {
+
+        localStorage.setItem(
+          "token",
+          response.data.token
+        );
+
+        console.log(
+          "TOKEN SAVED:",
+          localStorage.getItem("token")
+        );
+
+        navigate("/dashboard");
+
+      } else {
+
+        alert(
+          response.data.message ||
+          "Login failed"
+        );
+      }
 
     } catch (error) {
 
-  console.log(error);
+      console.log(error);
 
-  console.log(error.response);
-
-  alert(
-    error.response?.data ||
-    "Login failed"
-  );
-}
+      alert("Login failed");
+    }
   };
 
   return (
+
     <div>
 
       <h1>Login</h1>
@@ -73,9 +89,7 @@ function Login() {
         <br />
 
         <button type="submit">
-
           Login
-
         </button>
 
       </form>

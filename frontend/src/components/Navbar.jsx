@@ -4,16 +4,32 @@ function Navbar() {
 
   const navigate = useNavigate();
 
+  const token =
+    localStorage.getItem("token");
+
   const logout = () => {
 
     localStorage.removeItem("token");
 
     navigate("/login");
+
+    window.location.reload();
   };
+
+  if (!token) {
+
+    return null;
+  }
 
   return (
 
-    <nav>
+    <nav
+      style={{
+        padding: "15px",
+        backgroundColor: "#f4f4f4",
+        marginBottom: "20px"
+      }}
+    >
 
       <Link to="/dashboard">
         Dashboard
@@ -29,6 +45,18 @@ function Navbar() {
 
       <Link to="/problems">
         Problems
+      </Link>
+
+      {" | "}
+
+      <Link to="/leaderboard">
+        Leaderboard
+      </Link>
+
+      {" | "}
+
+      <Link to="/recommendations">
+        Recommendations
       </Link>
 
       {" | "}

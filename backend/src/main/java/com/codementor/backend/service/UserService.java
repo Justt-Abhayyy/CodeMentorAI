@@ -18,10 +18,11 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder passwordEncoder,
-                       JwtService jwtService) {
-
+    public UserService(
+            UserRepository userRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            JwtService jwtService
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -29,14 +30,26 @@ public class UserService {
 
     public User registerUser(User user) {
 
-        User existingUser = userRepository.findByEmail(user.getEmail());
+        String email =
+                user.getEmail()
+                        .trim()
+                        .toLowerCase();
+
+        User existingUser =
+                userRepository.findByEmail(email);
 
         if (existingUser != null) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new EmailAlreadyExistsException(
+                    "Email already exists"
+            );
         }
 
+        user.setEmail(email);
+
         user.setPassword(
-                passwordEncoder.encode(user.getPassword())
+                passwordEncoder.encode(
+                        user.getPassword()
+                )
         );
 
         return userRepository.save(user);
@@ -44,9 +57,20 @@ public class UserService {
 
     public LoginResponse loginUser(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail());
+        String email =
+                request.getEmail()
+                        .trim()
+                        .toLowerCase();
+
+        User user =
+                userRepository.findByEmail(email);
 
         if (user == null) {
+
+            System.out.println(
+                    "User not found: " + email
+            );
+
             return new LoginResponse(
                     "Invalid email or password",
                     null
@@ -59,7 +83,27 @@ public class UserService {
                         user.getPassword()
                 );
 
+        System.out.println(
+                "Entered Email: " + email
+        );
+
+        System.out.println(
+                "Entered Password: " +
+                        request.getPassword()
+        );
+
+        System.out.println(
+                "DB Password Hash: " +
+                        user.getPassword()
+        );
+
+        System.out.println(
+                "Password Match = " +
+                        passwordMatches
+        );
+
         if (!passwordMatches) {
+
             return new LoginResponse(
                     "Invalid email or password",
                     null
@@ -67,7 +111,13 @@ public class UserService {
         }
 
         String token =
-                jwtService.generateToken(user.getEmail());
+                jwtService.generateToken(
+                        user.getEmail()
+                );
+
+        System.out.println(
+                "Generated Token = " + token
+        );
 
         return new LoginResponse(
                 "Login successful",
@@ -75,9 +125,18 @@ public class UserService {
         );
     }
 
-    public UserProfileResponse getProfile(String email) {
+    public UserProfileResponse getProfile(
+            String email
+    ) {
 
-        User user = userRepository.findByEmail(email);
+        User user =
+                userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new RuntimeException(
+                    "User not found"
+            );
+        }
 
         return new UserProfileResponse(
                 user.getId(),
@@ -88,13 +147,29 @@ public class UserService {
 
     public UserProfileResponse updateProfile(
             String currentEmail,
-            UpdateProfileRequest request) {
+            UpdateProfileRequest request
+    ) {
 
         User user =
-                userRepository.findByEmail(currentEmail);
+                userRepository.findByEmail(
+                        currentEmail
+                );
 
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
+        if (user == null) {
+            throw new RuntimeException(
+                    "User not found"
+            );
+        }
+
+        user.setName(
+                request.getName()
+        );
+
+        user.setEmail(
+                request.getEmail()
+                        .trim()
+                        .toLowerCase()
+        );
 
         User updatedUser =
                 userRepository.save(user);

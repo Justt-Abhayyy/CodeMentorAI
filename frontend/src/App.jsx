@@ -10,6 +10,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Problems from "./pages/Problems";
+import Leaderboard from "./pages/Leaderboard";
+import Recommendations from "./pages/Recommendations";
 
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -23,6 +25,24 @@ function App() {
       <Navbar />
 
       <Routes>
+
+        <Route
+  path="/leaderboard"
+  element={
+    <ProtectedRoute>
+      <Leaderboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/recommendations"
+  element={
+    <ProtectedRoute>
+      <Recommendations />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/"
