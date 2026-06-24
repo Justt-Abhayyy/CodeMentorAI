@@ -6,12 +6,6 @@ function Profile() {
   const [profile, setProfile] =
     useState(null);
 
-  const [name, setName] =
-    useState("");
-
-  const [email, setEmail] =
-    useState("");
-
   useEffect(() => {
 
     loadProfile();
@@ -31,107 +25,56 @@ function Profile() {
         response.data
       );
 
-      setName(
-        response.data.name
-      );
-
-      setEmail(
-        response.data.email
-      );
-
     } catch (error) {
 
       console.log(error);
-    }
-  };
-
-  const updateProfile = async () => {
-
-    try {
-
-      const response =
-        await api.put(
-          "/api/users/me",
-          {
-            name,
-            email
-          }
-        );
-
-      setProfile(
-        response.data
-      );
-
-      alert(
-        "Profile updated successfully"
-      );
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert(
-        "Profile update failed"
-      );
     }
   };
 
   if (!profile) {
 
-    return <h2>Loading...</h2>;
+    return (
+      <h2 className="m-4">
+        Loading...
+      </h2>
+    );
   }
 
   return (
 
-    <div>
+    <div className="container mt-4">
 
-      <h1>Profile</h1>
+      <div className="card shadow">
 
-      <p>
-        ID: {profile.id}
-      </p>
+        <div className="card-body">
 
-      <br />
+          <h2>
+            User Profile
+          </h2>
 
-      <label>
-        Name
-      </label>
+          <hr />
 
-      <br />
+          <h5>
+            ID:
+            {" "}
+            {profile.id}
+          </h5>
 
-      <input
-        type="text"
-        value={name}
-        onChange={(e) =>
-          setName(e.target.value)
-        }
-      />
+          <h5>
+            Name:
+            {" "}
+            {profile.name}
+          </h5>
 
-      <br />
-      <br />
+          <h5>
+            Email:
+            {" "}
+            {profile.email}
+          </h5>
 
-      <label>
-        Email
-      </label>
+        </div>
 
-      <br />
-
-      <input
-        type="email"
-        value={email}
-        onChange={(e) =>
-          setEmail(e.target.value)
-        }
-      />
-
-      <br />
-      <br />
-
-      <button
-        onClick={updateProfile}
-      >
-        Save Changes
-      </button>
+      </div>
 
     </div>
   );

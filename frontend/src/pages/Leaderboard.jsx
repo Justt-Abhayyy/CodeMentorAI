@@ -33,11 +33,15 @@ function Leaderboard() {
 
   return (
 
-    <div>
+    <div className="container mt-4">
 
-      <h1>Leaderboard</h1>
+      <h1>
+        Leaderboard
+      </h1>
 
-      <table border="1">
+      <table
+        className="table table-striped table-bordered mt-4"
+      >
 
         <thead>
 
@@ -55,27 +59,33 @@ function Leaderboard() {
 
         <tbody>
 
-          {leaders.map((leader) => (
+          {
 
-            <tr
-              key={leader.rank}
-            >
+            leaders.map(
+              leader => (
 
-              <td>
-                {leader.rank}
-              </td>
+                <tr
+                  key={leader.rank}
+                >
 
-              <td>
-                {leader.name}
-              </td>
+                  <td>
+                    #{leader.rank}
+                  </td>
 
-              <td>
-                {leader.submissions}
-              </td>
+                  <td>
+                    {leader.name}
+                  </td>
 
-            </tr>
+                  <td>
+                    {leader.submissions}
+                  </td>
 
-          ))}
+                </tr>
+
+              )
+            )
+
+          }
 
         </tbody>
 

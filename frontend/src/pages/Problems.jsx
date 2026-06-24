@@ -34,51 +34,69 @@ function Problems() {
 
   return (
 
-    <div>
+    <div className="container mt-4">
 
-      <h1>Problems</h1>
+      <h1 className="mb-4">
+        Coding Problems
+      </h1>
 
-      {
+      <div className="row">
 
-        problems.map(problem => (
+        {
 
-          <div
-            key={problem.id}
-          >
+          problems.map(problem => (
 
-            <h3>
-              {problem.title}
-            </h3>
-
-            <p>
-              Difficulty:
-              {" "}
-              {problem.difficulty}
-            </p>
-
-            <p>
-              Tag:
-              {" "}
-              {problem.tag}
-            </p>
-
-            <Link
-              to={`/problems/${problem.id}`}
+            <div
+              className="col-md-4 mb-4"
+              key={problem.id}
             >
 
-              <button>
-                Open Problem
-              </button>
+              <div className="card h-100 shadow">
 
-            </Link>
+                <div className="card-body">
 
-            <hr />
+                  <h4 className="card-title">
+                    {problem.title}
+                  </h4>
 
-          </div>
+                  <p>
 
-        ))
+                    <span
+                      className="badge bg-primary"
+                    >
+                      {problem.difficulty}
+                    </span>
 
-      }
+                  </p>
+
+                  <p>
+
+                    <span
+                      className="badge bg-secondary"
+                    >
+                      {problem.tag}
+                    </span>
+
+                  </p>
+
+                  <Link
+                    to={`/problems/${problem.id}`}
+                    className="btn btn-success"
+                  >
+                    Solve Problem
+                  </Link>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))
+
+        }
+
+      </div>
 
     </div>
   );

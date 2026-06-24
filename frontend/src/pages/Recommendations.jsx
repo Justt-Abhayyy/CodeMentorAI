@@ -36,40 +36,72 @@ function Recommendations() {
 
   return (
 
-    <div>
+    <div className="container mt-4">
 
       <h1>
         Recommended Problems
       </h1>
 
-      {recommendations.map(
-        (problem, index) => (
+      <div className="row">
 
-          <div
-            key={index}
-          >
+        {
 
-            <h3>
-              {problem.title}
-            </h3>
+          recommendations.map(
+            (problem, index) => (
 
-            <p>
-              Difficulty:
-              {" "}
-              {problem.difficulty}
-            </p>
+              <div
+                className="col-md-4 mb-4"
+                key={index}
+              >
 
-            <p>
-              Tag:
-              {" "}
-              {problem.tag}
-            </p>
+                <div
+                  className="card shadow h-100"
+                >
 
-            <hr />
+                  <div
+                    className="card-body"
+                  >
 
-          </div>
-        )
-      )}
+                    <h4>
+                      {problem.title}
+                    </h4>
+
+                    <p>
+
+                      <span
+                        className="badge bg-primary"
+                      >
+                        {
+                          problem.difficulty
+                        }
+                      </span>
+
+                    </p>
+
+                    <p>
+
+                      <span
+                        className="badge bg-secondary"
+                      >
+                        {
+                          problem.tag
+                        }
+                      </span>
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            )
+          )
+
+        }
+
+      </div>
 
     </div>
   );

@@ -6,8 +6,8 @@ function MySubmissions() {
   const [submissions, setSubmissions] =
     useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [search, setSearch] =
+    useState("");
 
   useEffect(() => {
 
@@ -31,113 +31,138 @@ function MySubmissions() {
     } catch (error) {
 
       console.log(error);
-
-    } finally {
-
-      setLoading(false);
     }
   };
 
-  if (loading) {
+  const getBadgeClass =
+    (status) => {
 
-    return <h2>Loading...</h2>;
-  }
+      if (status === "SOLVED") {
+
+        return "bg-success";
+      }
+
+      if (status === "PENDING") {
+
+        return "bg-warning";
+      }
+
+      return "bg-danger";
+    };
+
+  const filteredSubmissions =
+    submissions.filter(
+      submission =>
+
+        submission.problem?.title
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
 
   return (
 
-    <div>
+    <div className="container mt-4">
 
-      <h1>My Submissions</h1>
+      <h1>
+        My Submissions
+      </h1>
 
-      {
-
-        submissions.length === 0 ?
-
-          (
-
-            <p>
-              No submissions found.
-            </p>
-
+      <input
+        className="form-control mb-3"
+        placeholder="Search Problem..."
+        value={search}
+        onChange={(e) =>
+          setSearch(
+            e.target.value
           )
+        }
+      />
 
-          :
+      <table
+        className="table table-striped table-bordered"
+      >
 
-          (
+        <thead>
 
-            <table border="1">
+          <tr>
 
-              <thead>
+            <th>ID</th>
 
-                <tr>
+            <th>Problem</th>
 
-                  <th>ID</th>
+            <th>Status</th>
 
-                  <th>Problem</th>
+            <th>Language</th>
 
-                  <th>Status</th>
+            <th>Submitted At</th>
 
-                  <th>Language</th>
+          </tr>
 
-                  <th>Submitted At</th>
+        </thead>
+
+        <tbody>
+
+          {
+
+            filteredSubmissions.map(
+              submission => (
+
+                <tr
+                  key={submission.id}
+                >
+
+                  <td>
+                    {submission.id}
+                  </td>
+
+                  <td>
+                    {
+                      submission.problem
+                        ? submission.problem.title
+                        : "Unknown"
+                    }
+                  </td>
+
+                  <td>
+
+                    <span
+                      className={`badge ${getBadgeClass(
+                        submission.status
+                      )}`}
+                    >
+
+                      {
+                        submission.status
+                      }
+
+                    </span>
+
+                  </td>
+
+                  <td>
+                    {
+                      submission.language
+                    }
+                  </td>
+
+                  <td>
+                    {
+                      submission.submittedAt
+                    }
+                  </td>
 
                 </tr>
 
-              </thead>
+              )
+            )
 
-              <tbody>
+          }
 
-                {
+        </tbody>
 
-                  submissions.map(
-                    submission => (
-
-                      <tr
-                        key={submission.id}
-                      >
-
-                        <td>
-                          {submission.id}
-                        </td>
-
-                        <td>
-                          {
-                            submission.problem
-                              ? submission.problem.title
-                              : "Unknown Problem"
-                          }
-                        </td>
-
-                        <td>
-                          {submission.status}
-                        </td>
-
-                        <td>
-                          {
-                            submission.language
-                              ? submission.language
-                              : "N/A"
-                          }
-                        </td>
-
-                        <td>
-                          {submission.submittedAt}
-                        </td>
-
-                      </tr>
-
-                    )
-                  )
-
-                }
-
-              </tbody>
-
-            </table>
-
-          )
-
-      }
+      </table>
 
     </div>
   );
