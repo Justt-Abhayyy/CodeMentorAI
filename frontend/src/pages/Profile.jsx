@@ -6,6 +6,12 @@ function Profile() {
   const [profile, setProfile] =
     useState(null);
 
+  const [name, setName] =
+    useState("");
+
+  const [email, setEmail] =
+    useState("");
+
   useEffect(() => {
 
     loadProfile();
@@ -21,11 +27,52 @@ function Profile() {
           "/api/users/me"
         );
 
-      setProfile(response.data);
+      setProfile(
+        response.data
+      );
+
+      setName(
+        response.data.name
+      );
+
+      setEmail(
+        response.data.email
+      );
 
     } catch (error) {
 
       console.log(error);
+    }
+  };
+
+  const updateProfile = async () => {
+
+    try {
+
+      const response =
+        await api.put(
+          "/api/users/me",
+          {
+            name,
+            email
+          }
+        );
+
+      setProfile(
+        response.data
+      );
+
+      alert(
+        "Profile updated successfully"
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        "Profile update failed"
+      );
     }
   };
 
@@ -40,11 +87,51 @@ function Profile() {
 
       <h1>Profile</h1>
 
-      <p>ID: {profile.id}</p>
+      <p>
+        ID: {profile.id}
+      </p>
 
-      <p>Name: {profile.name}</p>
+      <br />
 
-      <p>Email: {profile.email}</p>
+      <label>
+        Name
+      </label>
+
+      <br />
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) =>
+          setName(e.target.value)
+        }
+      />
+
+      <br />
+      <br />
+
+      <label>
+        Email
+      </label>
+
+      <br />
+
+      <input
+        type="email"
+        value={email}
+        onChange={(e) =>
+          setEmail(e.target.value)
+        }
+      />
+
+      <br />
+      <br />
+
+      <button
+        onClick={updateProfile}
+      >
+        Save Changes
+      </button>
 
     </div>
   );
