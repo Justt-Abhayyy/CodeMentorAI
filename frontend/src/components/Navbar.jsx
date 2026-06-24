@@ -4,68 +4,74 @@ function Navbar() {
 
   const navigate = useNavigate();
 
-  const token =
-    localStorage.getItem("token");
-
   const logout = () => {
 
     localStorage.removeItem("token");
 
     navigate("/login");
-
-    window.location.reload();
   };
 
-  if (!token) {
-
-    return null;
-  }
+  const token =
+    localStorage.getItem("token");
 
   return (
 
-    <nav
-      style={{
-        padding: "15px",
-        backgroundColor: "#f4f4f4",
-        marginBottom: "20px"
-      }}
-    >
+    <nav>
 
-      <Link to="/dashboard">
-        Dashboard
-      </Link>
+      {
 
-      {" | "}
+        token && (
 
-      <Link to="/profile">
-        Profile
-      </Link>
+          <>
 
-      {" | "}
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
 
-      <Link to="/problems">
-        Problems
-      </Link>
+            {" | "}
 
-      {" | "}
+            <Link to="/profile">
+              Profile
+            </Link>
 
-      <Link to="/leaderboard">
-        Leaderboard
-      </Link>
+            {" | "}
 
-      {" | "}
+            <Link to="/problems">
+              Problems
+            </Link>
 
-      <Link to="/recommendations">
-        Recommendations
-      </Link>
+            {" | "}
 
-      {" | "}
+            <Link to="/submissions">
+              My Submissions
+            </Link>
 
-      <button onClick={logout}>
-        Logout
-      </button>
+            {" | "}
+
+            <Link to="/leaderboard">
+              Leaderboard
+            </Link>
+
+            {" | "}
+
+            <Link to="/recommendations">
+              Recommendations
+            </Link>
+
+            {" | "}
+
+            <button onClick={logout}>
+              Logout
+            </button>
+
+          </>
+
+        )
+
+      }
 
     </nav>
+
   );
 }
 

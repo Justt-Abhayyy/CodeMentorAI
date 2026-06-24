@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 
 function Problems() {
@@ -37,29 +38,47 @@ function Problems() {
 
       <h1>Problems</h1>
 
-      {problems.map(problem => (
+      {
 
-        <div
-          key={problem.id}
-        >
+        problems.map(problem => (
 
-          <h3>
-            {problem.title}
-          </h3>
+          <div
+            key={problem.id}
+          >
 
-          <p>
-            {problem.difficulty}
-          </p>
+            <h3>
+              {problem.title}
+            </h3>
 
-          <p>
-            {problem.tag}
-          </p>
+            <p>
+              Difficulty:
+              {" "}
+              {problem.difficulty}
+            </p>
 
-          <hr />
+            <p>
+              Tag:
+              {" "}
+              {problem.tag}
+            </p>
 
-        </div>
+            <Link
+              to={`/problems/${problem.id}`}
+            >
 
-      ))}
+              <button>
+                Open Problem
+              </button>
+
+            </Link>
+
+            <hr />
+
+          </div>
+
+        ))
+
+      }
 
     </div>
   );

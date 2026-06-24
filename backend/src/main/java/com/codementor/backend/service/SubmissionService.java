@@ -37,8 +37,11 @@ public class SubmissionService {
                 userRepository.findByEmail(email);
 
         Problem problem =
-                problemRepository.findById(problemId)
-                        .orElse(null);
+        problemRepository.findById(problemId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Problem not found"
+                        ));
 
         submission.setUser(user);
         submission.setProblem(problem);
