@@ -1,11 +1,60 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+
+  useEffect,
+
+  useState
+
+} from "react";
+
 import api from "../services/api";
+
+import Loader from "../components/ui/Loader";
+
+import ProblemCard from "../components/problems/ProblemCard";
+
+import ProblemFilters from "../components/problems/ProblemFilters";
 
 function Problems() {
 
-  const [problems, setProblems] =
-    useState([]);
+  const [
+
+    problems,
+
+    setProblems
+
+  ] =
+
+  useState([]);
+
+  const [
+
+    filtered,
+
+    setFiltered
+
+  ] =
+
+  useState([]);
+
+  const [
+
+    search,
+
+    setSearch
+
+  ] =
+
+  useState("");
+
+  const [
+
+    loading,
+
+    setLoading
+
+  ] =
+
+  useState(true);
 
   useEffect(() => {
 
@@ -13,93 +62,138 @@ function Problems() {
 
   }, []);
 
+  useEffect(() => {
+
+    const result =
+
+      problems.filter(
+
+        problem =>
+
+          problem.title
+
+            .toLowerCase()
+
+            .includes(
+
+              search.toLowerCase()
+
+            )
+
+      );
+
+    setFiltered(result);
+
+  }, [
+
+    search,
+
+    problems
+
+  ]);
+
   const loadProblems = async () => {
 
     try {
 
       const response =
+
         await api.get(
+
           "/api/problems"
+
         );
 
       setProblems(
+
         response.data
+
       );
 
-    } catch (error) {
+      setFiltered(
+
+        response.data
+
+      );
+
+    }
+
+    catch(error){
 
       console.log(error);
+
     }
+
+    finally{
+
+      setLoading(false);
+
+    }
+
   };
 
-  return (
+  if(loading){
 
-    <div className="container mt-4">
+    return <Loader/>;
 
-      <h1 className="mb-4">
-        Coding Problems
-      </h1>
+  }
 
-      <div className="row">
+  return(
+
+    <div className="space-y-8">
+
+      <div>
+
+        <h1 className="text-4xl font-bold">
+
+          Problems
+
+        </h1>
+
+        <p className="text-zinc-400 mt-2">
+
+          Solve coding problems and improve your skills.
+
+        </p>
+
+      </div>
+
+      <ProblemFilters
+
+        search={search}
+
+        setSearch={setSearch}
+
+      />
+
+      <div className="grid gap-6">
 
         {
 
-          problems.map(problem => (
+          filtered.map(
 
-            <div
-              className="col-md-4 mb-4"
-              key={problem.id}
-            >
+            problem=>(
 
-              <div className="card h-100 shadow">
+              <ProblemCard
 
-                <div className="card-body">
+                key={problem.id}
 
-                  <h4 className="card-title">
-                    {problem.title}
-                  </h4>
+                problem={problem}
 
-                  <p>
+              />
 
-                    <span
-                      className="badge bg-primary"
-                    >
-                      {problem.difficulty}
-                    </span>
+            )
 
-                  </p>
-
-                  <p>
-
-                    <span
-                      className="badge bg-secondary"
-                    >
-                      {problem.tag}
-                    </span>
-
-                  </p>
-
-                  <Link
-                    to={`/problems/${problem.id}`}
-                    className="btn btn-success"
-                  >
-                    Solve Problem
-                  </Link>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          ))
+          )
 
         }
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default Problems;

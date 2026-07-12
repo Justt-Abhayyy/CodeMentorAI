@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+
 import api from "../services/api";
+
+import Loader from "../components/ui/Loader";
+
+import Card from "../components/ui/Card";
 
 function MySubmissions() {
 
-  const [submissions, setSubmissions] =
-    useState([]);
-
-  const [search, setSearch] =
-    useState("");
+  const [submissions, setSubmissions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
@@ -19,153 +21,98 @@ function MySubmissions() {
 
     try {
 
-      const response =
-        await api.get(
-          "/api/submissions/my"
-        );
-
-      setSubmissions(
-        response.data
+      const response = await api.get(
+        "/api/submissions/my"
       );
+
+      setSubmissions(response.data);
 
     } catch (error) {
 
       console.log(error);
+
+    } finally {
+
+      setLoading(false);
+
     }
+
   };
 
-  const getBadgeClass =
-    (status) => {
+  if (loading) {
 
-      if (status === "SOLVED") {
+    return <Loader />;
 
-        return "bg-success";
-      }
-
-      if (status === "PENDING") {
-
-        return "bg-warning";
-      }
-
-      return "bg-danger";
-    };
-
-  const filteredSubmissions =
-    submissions.filter(
-      submission =>
-
-        submission.problem?.title
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          )
-    );
+  }
 
   return (
 
-    <div className="container mt-4">
+    <div className="space-y-8">
 
-      <h1>
+      <h1 className="text-4xl font-bold">
+
         My Submissions
+
       </h1>
 
-      <input
-        className="form-control mb-3"
-        placeholder="Search Problem..."
-        value={search}
-        onChange={(e) =>
-          setSearch(
-            e.target.value
-          )
-        }
-      />
+      {
 
-      <table
-        className="table table-striped table-bordered"
-      >
+        submissions.map(submission => (
 
-        <thead>
+          <Card key={submission.id}>
 
-          <tr>
+            <div className="flex justify-between">
 
-            <th>ID</th>
+              <div>
 
-            <th>Problem</th>
+                <h2 className="text-xl font-semibold">
 
-            <th>Status</th>
+                  {
 
-            <th>Language</th>
+                    submission.problem
+                      ? submission.problem.title
+                      : "Unknown Problem"
 
-            <th>Submitted At</th>
+                  }
 
-          </tr>
+                </h2>
 
-        </thead>
+                <p className="text-zinc-400 mt-2">
 
-        <tbody>
+                  {submission.language}
 
-          {
+                </p>
 
-            filteredSubmissions.map(
-              submission => (
+              </div>
 
-                <tr
-                  key={submission.id}
-                >
+              <div className="text-right">
 
-                  <td>
-                    {submission.id}
-                  </td>
+                <h3 className="text-green-400">
 
-                  <td>
-                    {
-                      submission.problem
-                        ? submission.problem.title
-                        : "Unknown"
-                    }
-                  </td>
+                  {submission.status}
 
-                  <td>
+                </h3>
 
-                    <span
-                      className={`badge ${getBadgeClass(
-                        submission.status
-                      )}`}
-                    >
+                <p className="text-zinc-500 text-sm">
 
-                      {
-                        submission.status
-                      }
+                  {submission.submittedAt}
 
-                    </span>
+                </p>
 
-                  </td>
+              </div>
 
-                  <td>
-                    {
-                      submission.language
-                    }
-                  </td>
+            </div>
 
-                  <td>
-                    {
-                      submission.submittedAt
-                    }
-                  </td>
+          </Card>
 
-                </tr>
+        ))
 
-              )
-            )
-
-          }
-
-        </tbody>
-
-      </table>
+      }
 
     </div>
+
   );
+
 }
 
 export default MySubmissions;

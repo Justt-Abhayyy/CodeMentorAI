@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
+
 import api from "../services/api";
+
+import Card from "../components/ui/Card";
+
+import Loader from "../components/ui/Loader";
+
+import Badge from "../components/ui/Badge";
 
 function Recommendations() {
 
-  const [
-    recommendations,
-    setRecommendations
-  ] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
@@ -14,97 +19,80 @@ function Recommendations() {
 
   }, []);
 
-  const loadRecommendations =
-    async () => {
+  const loadRecommendations = async () => {
 
-      try {
+    try {
 
-        const response =
-          await api.get(
-            "/api/recommendations"
-          );
+      const response = await api.get("/api/recommendations");
 
-        setRecommendations(
-          response.data
-        );
+      setRecommendations(response.data);
 
-      } catch (error) {
+    } catch (error) {
 
-        console.log(error);
-      }
-    };
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  if (loading) {
+
+    return <Loader />;
+
+  }
 
   return (
 
-    <div className="container mt-4">
+    <div className="space-y-8">
 
-      <h1>
-        Recommended Problems
+      <h1 className="text-4xl font-bold">
+
+        AI Recommendations
+
       </h1>
 
-      <div className="row">
+      {
 
-        {
+        recommendations.map((problem, index) => (
 
-          recommendations.map(
-            (problem, index) => (
+          <Card key={index}>
 
-              <div
-                className="col-md-4 mb-4"
-                key={index}
-              >
+            <h2 className="text-2xl font-semibold">
 
-                <div
-                  className="card shadow h-100"
-                >
+              {problem.title}
 
-                  <div
-                    className="card-body"
-                  >
+            </h2>
 
-                    <h4>
-                      {problem.title}
-                    </h4>
+            <div className="flex gap-3 mt-4">
 
-                    <p>
+              <Badge color="green">
 
-                      <span
-                        className="badge bg-primary"
-                      >
-                        {
-                          problem.difficulty
-                        }
-                      </span>
+                {problem.difficulty}
 
-                    </p>
+              </Badge>
 
-                    <p>
+              <Badge>
 
-                      <span
-                        className="badge bg-secondary"
-                      >
-                        {
-                          problem.tag
-                        }
-                      </span>
+                {problem.tag}
 
-                    </p>
+              </Badge>
 
-                  </div>
+            </div>
 
-                </div>
+          </Card>
 
-              </div>
+        ))
 
-            )
-          )
-
-        }
-
-      </div>
+      }
 
     </div>
+
   );
+
 }
 
 export default Recommendations;

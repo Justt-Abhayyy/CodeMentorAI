@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+
 import api from "../services/api";
+
+import Loader from "../components/ui/Loader";
+
+import Card from "../components/ui/Card";
 
 function Leaderboard() {
 
-  const [leaders, setLeaders] =
-    useState([]);
+  const [leaders, setLeaders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
@@ -16,83 +21,76 @@ function Leaderboard() {
 
     try {
 
-      const response =
-        await api.get(
-          "/api/leaderboard"
-        );
+      const response = await api.get("/api/leaderboard");
 
-      setLeaders(
-        response.data
-      );
+      setLeaders(response.data);
 
     } catch (error) {
 
       console.log(error);
+
+    } finally {
+
+      setLoading(false);
+
     }
+
   };
+
+  if (loading) {
+
+    return <Loader />;
+
+  }
 
   return (
 
-    <div className="container mt-4">
+    <div className="space-y-8">
 
-      <h1>
+      <h1 className="text-4xl font-bold">
+
         Leaderboard
+
       </h1>
 
-      <table
-        className="table table-striped table-bordered mt-4"
-      >
+      {
 
-        <thead>
+        leaders.map(leader => (
 
-          <tr>
+          <Card key={leader.rank}>
 
-            <th>Rank</th>
+            <div className="flex justify-between items-center">
 
-            <th>Name</th>
+              <h2 className="text-2xl">
 
-            <th>Submissions</th>
+                #{leader.rank}
 
-          </tr>
+              </h2>
 
-        </thead>
+              <h2 className="text-xl">
 
-        <tbody>
+                {leader.name}
 
-          {
+              </h2>
 
-            leaders.map(
-              leader => (
+              <h2 className="text-blue-400">
 
-                <tr
-                  key={leader.rank}
-                >
+                {leader.submissions} Solved
 
-                  <td>
-                    #{leader.rank}
-                  </td>
+              </h2>
 
-                  <td>
-                    {leader.name}
-                  </td>
+            </div>
 
-                  <td>
-                    {leader.submissions}
-                  </td>
+          </Card>
 
-                </tr>
+        ))
 
-              )
-            )
-
-          }
-
-        </tbody>
-
-      </table>
+      }
 
     </div>
+
   );
+
 }
 
 export default Leaderboard;

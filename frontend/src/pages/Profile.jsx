@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+
 import api from "../services/api";
+
+import Loader from "../components/ui/Loader";
+
+import Card from "../components/ui/Card";
 
 function Profile() {
 
-  const [profile, setProfile] =
-    useState(null);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
 
@@ -16,68 +20,90 @@ function Profile() {
 
     try {
 
-      const response =
-        await api.get(
-          "/api/users/me"
-        );
+      const response = await api.get("/api/users/me");
 
-      setProfile(
-        response.data
-      );
+      setProfile(response.data);
 
     } catch (error) {
 
       console.log(error);
+
     }
+
   };
 
   if (!profile) {
 
-    return (
-      <h2 className="m-4">
-        Loading...
-      </h2>
-    );
+    return <Loader />;
+
   }
 
   return (
 
-    <div className="container mt-4">
+    <Card className="max-w-xl">
 
-      <div className="card shadow">
+      <h1 className="text-4xl font-bold mb-8">
 
-        <div className="card-body">
+        My Profile
 
-          <h2>
-            User Profile
+      </h1>
+
+      <div className="space-y-6">
+
+        <div>
+
+          <h4 className="text-zinc-500">
+
+            Name
+
+          </h4>
+
+          <h2 className="text-2xl">
+
+            {profile.name}
+
           </h2>
 
-          <hr />
+        </div>
 
-          <h5>
-            ID:
-            {" "}
-            {profile.id}
-          </h5>
+        <div>
 
-          <h5>
-            Name:
-            {" "}
-            {profile.name}
-          </h5>
+          <h4 className="text-zinc-500">
 
-          <h5>
-            Email:
-            {" "}
+            Email
+
+          </h4>
+
+          <h2 className="text-2xl">
+
             {profile.email}
-          </h5>
+
+          </h2>
+
+        </div>
+
+        <div>
+
+          <h4 className="text-zinc-500">
+
+            User ID
+
+          </h4>
+
+          <h2 className="text-2xl">
+
+            {profile.id}
+
+          </h2>
 
         </div>
 
       </div>
 
-    </div>
+    </Card>
+
   );
+
 }
 
 export default Profile;

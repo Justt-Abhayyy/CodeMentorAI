@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* ---------- Base ---------- */
+
+html,
+body,
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    background: #09090B;
+
+    color: #FAFAFA;
+
+    font-family:
+        Inter,
+        system-ui,
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+/* ---------- Scrollbar ---------- */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #18181B;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3F3F46;
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #52525B;
+}
+
+/* ---------- Selection ---------- */
+
+::selection {
+    background: #2563EB;
+    color: white;
+}
+
+/* ---------- Buttons ---------- */
+
+button {
+    cursor: pointer;
+}
+
+/* ---------- Links ---------- */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ---------- Cards ---------- */
+
+.glass {
+
+    background:
+        rgba(24,24,27,.65);
+
+    backdrop-filter:
+        blur(14px);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35);
+}
+
+/* ---------- Animation ---------- */
+
+* {
+    transition:
+        background .25s,
+        color .25s,
+        border .25s,
+        transform .2s;
+}

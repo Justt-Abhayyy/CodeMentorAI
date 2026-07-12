@@ -1,245 +1,287 @@
 import { useEffect, useState } from "react";
+
 import api from "../services/api";
+
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import Badge from "../components/ui/Badge";
+import Loader from "../components/ui/Loader";
 
 function AdminProblems() {
 
-  const [problems, setProblems] =
-    useState([]);
+  const [problems,setProblems]=useState([]);
 
-  const [title, setTitle] =
-    useState("");
+  const [loading,setLoading]=useState(true);
 
-  const [description, setDescription] =
-    useState("");
+  const [title,setTitle]=useState("");
 
-  const [difficulty, setDifficulty] =
-    useState("EASY");
+  const [description,setDescription]=useState("");
 
-  const [tag, setTag] =
-    useState("ARRAYS");
+  const [difficulty,setDifficulty]=useState("EASY");
 
-  useEffect(() => {
+  const [tag,setTag]=useState("ARRAYS");
+
+  useEffect(()=>{
 
     loadProblems();
 
-  }, []);
+  },[]);
 
-  const loadProblems = async () => {
+  const loadProblems=async()=>{
 
-    try {
+    try{
 
-      const response =
-        await api.get(
-          "/api/problems"
-        );
+      const response=
 
-      setProblems(
-        response.data
+      await api.get(
+
+        "/api/problems"
+
       );
 
-    } catch (error) {
+      setProblems(
+
+        response.data
+
+      );
+
+    }
+
+    catch(error){
 
       console.log(error);
+
     }
+
+    finally{
+
+      setLoading(false);
+
+    }
+
   };
 
-  const addProblem = async () => {
+  const addProblem=async()=>{
 
-    try {
+    try{
 
       await api.post(
+
         "/api/problems",
+
         {
+
           title,
+
           description,
+
           difficulty,
+
           tag
+
         }
+
+      );
+
+      setTitle("");
+
+      setDescription("");
+
+      loadProblems();
+
+    }
+
+    catch(error){
+
+      console.log(error);
+
+    }
+
+  };
+
+  const deleteProblem=async(id)=>{
+
+    try{
+
+      await api.delete(
+
+        `/api/problems/${id}`
+
       );
 
       loadProblems();
 
-      setTitle("");
-      setDescription("");
+    }
 
-    } catch (error) {
+    catch(error){
 
       console.log(error);
+
     }
+
   };
 
-  const deleteProblem =
-    async (id) => {
+  if(loading){
 
-      try {
+    return<Loader/>;
 
-        await api.delete(
-          `/api/problems/${id}`
-        );
+  }
 
-        loadProblems();
+  return(
 
-      } catch (error) {
+    <div className="space-y-8">
 
-        console.log(error);
-      }
-    };
+      <h1 className="text-4xl font-bold">
 
-  return (
+        Admin Panel
 
-    <div className="container mt-4">
-
-      <h1>
-        Admin Problem Manager
       </h1>
 
-      <div
-        className="card shadow p-4 mb-4"
-      >
+      <Card>
 
-        <input
-          className="form-control mb-3"
-          placeholder="Title"
-          value={title}
-          onChange={(e) =>
-            setTitle(
-              e.target.value
-            )
-          }
-        />
+        <div className="space-y-4">
 
-        <textarea
-          className="form-control mb-3"
-          rows="5"
-          placeholder="Description"
-          value={description}
-          onChange={(e) =>
-            setDescription(
-              e.target.value
-            )
-          }
-        />
+          <Input
 
-        <select
-          className="form-select mb-3"
-          value={difficulty}
-          onChange={(e) =>
-            setDifficulty(
-              e.target.value
-            )
-          }
-        >
+            placeholder="Problem Title"
 
-          <option>EASY</option>
-          <option>MEDIUM</option>
-          <option>HARD</option>
+            value={title}
 
-        </select>
+            onChange={(e)=>setTitle(e.target.value)}
 
-        <select
-          className="form-select mb-3"
-          value={tag}
-          onChange={(e) =>
-            setTag(
-              e.target.value
-            )
-          }
-        >
+          />
 
-          <option>ARRAYS</option>
-          <option>STRINGS</option>
-          <option>TREES</option>
-          <option>GRAPHS</option>
-          <option>DP</option>
+          <textarea
 
-        </select>
+            className="w-full rounded-2xl bg-zinc-900 border border-zinc-700 p-4"
 
-        <button
-          className="btn btn-primary"
-          onClick={addProblem}
-        >
-          Add Problem
-        </button>
+            rows="6"
+
+            placeholder="Description"
+
+            value={description}
+
+            onChange={(e)=>setDescription(e.target.value)}
+
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+
+            <select
+
+              value={difficulty}
+
+              onChange={(e)=>setDifficulty(e.target.value)}
+
+              className="rounded-2xl bg-zinc-900 border border-zinc-700 p-4"
+
+            >
+
+              <option>EASY</option>
+
+              <option>MEDIUM</option>
+
+              <option>HARD</option>
+
+            </select>
+
+            <select
+
+              value={tag}
+
+              onChange={(e)=>setTag(e.target.value)}
+
+              className="rounded-2xl bg-zinc-900 border border-zinc-700 p-4"
+
+            >
+
+              <option>ARRAYS</option>
+
+              <option>STRINGS</option>
+
+              <option>TREES</option>
+
+              <option>GRAPHS</option>
+
+              <option>DP</option>
+
+            </select>
+
+          </div>
+
+          <Button onClick={addProblem}>
+
+            Add Problem
+
+          </Button>
+
+        </div>
+
+      </Card>
+
+      <div className="space-y-4">
+
+        {
+
+          problems.map(problem=>(
+
+            <Card key={problem.id}>
+
+              <div className="flex justify-between items-center">
+
+                <div>
+
+                  <h2 className="text-xl font-semibold">
+
+                    {problem.title}
+
+                  </h2>
+
+                  <div className="flex gap-3 mt-3">
+
+                    <Badge color="green">
+
+                      {problem.difficulty}
+
+                    </Badge>
+
+                    <Badge>
+
+                      {problem.tag}
+
+                    </Badge>
+
+                  </div>
+
+                </div>
+
+                <Button
+
+                  variant="danger"
+
+                  onClick={()=>deleteProblem(problem.id)}
+
+                >
+
+                  Delete
+
+                </Button>
+
+              </div>
+
+            </Card>
+
+          ))
+
+        }
 
       </div>
 
-      <table
-        className="table table-bordered table-striped"
-      >
-
-        <thead>
-
-          <tr>
-
-            <th>ID</th>
-
-            <th>Title</th>
-
-            <th>Difficulty</th>
-
-            <th>Tag</th>
-
-            <th>Action</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {
-
-            problems.map(
-              problem => (
-
-                <tr
-                  key={problem.id}
-                >
-
-                  <td>
-                    {problem.id}
-                  </td>
-
-                  <td>
-                    {problem.title}
-                  </td>
-
-                  <td>
-                    {problem.difficulty}
-                  </td>
-
-                  <td>
-                    {problem.tag}
-                  </td>
-
-                  <td>
-
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() =>
-                        deleteProblem(
-                          problem.id
-                        )
-                      }
-                    >
-                      Delete
-                    </button>
-
-                  </td>
-
-                </tr>
-
-              )
-            )
-
-          }
-
-        </tbody>
-
-      </table>
-
     </div>
+
   );
+
 }
 
 export default AdminProblems;

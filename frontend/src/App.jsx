@@ -1,6 +1,19 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+
+BrowserRouter,
+
+Routes,
+
+Route,
+
+Navigate
+
+}
+
+from "react-router-dom";
 
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Problems from "./pages/Problems";
 import ProblemDetails from "./pages/ProblemDetails";
@@ -11,106 +24,197 @@ import MySubmissions from "./pages/MySubmissions";
 import AdminProblems from "./pages/AdminProblems";
 
 import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
 
-function App() {
+import AppLayout from "./components/layout/AppLayout";
 
-  return (
+function Layout({
 
-    <BrowserRouter>
+children
 
-      <Navbar />
+}){
 
-      <Routes>
+return(
 
-        <Route
-          path="/"
-          element={
-            <Navigate to="/login" />
-          }
-        />
+<ProtectedRoute>
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+<AppLayout>
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+{children}
 
-        <Route
-          path="/problems"
-          element={
-            <ProtectedRoute>
-              <Problems />
-            </ProtectedRoute>
-          }
-        />
+</AppLayout>
 
-        <Route
-          path="/problems/:id"
-          element={
-            <ProtectedRoute>
-              <ProblemDetails />
-            </ProtectedRoute>
-          }
-        />
+</ProtectedRoute>
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+);
 
-        <Route
-          path="/leaderboard"
-          element={
-            <ProtectedRoute>
-              <Leaderboard />
-            </ProtectedRoute>
-          }
-        />
+}
 
-        <Route
-          path="/recommendations"
-          element={
-            <ProtectedRoute>
-              <Recommendations />
-            </ProtectedRoute>
-          }
-        />
+function App(){
 
-        <Route
-          path="/submissions"
-          element={
-            <ProtectedRoute>
-              <MySubmissions />
-            </ProtectedRoute>
-          }
-        />
+return(
 
-        <Route
-          path="/admin/problems"
-          element={
-            <ProtectedRoute>
-              <AdminProblems />
-            </ProtectedRoute>
-          }
-        />
+<BrowserRouter>
 
-      </Routes>
+<Routes>
 
-    </BrowserRouter>
-  );
+<Route
+
+path="/"
+
+element={<Navigate to="/login"/>}
+
+/>
+
+<Route
+
+path="/login"
+
+element={<Login/>}
+
+/>
+
+<Route
+
+path="/register"
+
+element={<Register/>}
+
+/>
+
+<Route
+
+path="/dashboard"
+
+element={
+
+<Layout>
+
+<Dashboard/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/problems"
+
+element={
+
+<Layout>
+
+<Problems/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/problems/:id"
+
+element={
+
+<Layout>
+
+<ProblemDetails/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/profile"
+
+element={
+
+<Layout>
+
+<Profile/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/leaderboard"
+
+element={
+
+<Layout>
+
+<Leaderboard/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/recommendations"
+
+element={
+
+<Layout>
+
+<Recommendations/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/submissions"
+
+element={
+
+<Layout>
+
+<MySubmissions/>
+
+</Layout>
+
+}
+
+/>
+
+<Route
+
+path="/admin/problems"
+
+element={
+
+<Layout>
+
+<AdminProblems/>
+
+</Layout>
+
+}
+
+/>
+
+</Routes>
+
+</BrowserRouter>
+
+);
+
 }
 
 export default App;

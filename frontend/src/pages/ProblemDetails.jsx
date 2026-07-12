@@ -1,288 +1,319 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Editor from "@monaco-editor/react";
+import {
+
+useEffect,
+
+useState
+
+}
+
+from "react";
+
+import {
+
+useParams
+
+}
+
+from "react-router-dom";
+
 import api from "../services/api";
 
-function ProblemDetails() {
+import Button from "../components/ui/Button";
 
-  const { id } = useParams();
+import Badge from "../components/ui/Badge";
 
-  const [problem, setProblem] =
-    useState(null);
+import Loader from "../components/ui/Loader";
 
-  const [code, setCode] =
-    useState(
+import CodeEditor from "../components/problems/CodeEditor";
+
+import Console from "../components/problems/Console";
+
+import TestCasePanel from "../components/problems/TestCasePanel";
+
+function ProblemDetails(){
+
+const{
+
+id
+
+}=
+
+useParams();
+
+const[
+
+problem,
+
+setProblem
+
+]=
+
+useState(null);
+
+const[
+
+code,
+
+setCode
+
+]=
+
+useState(
+
 `public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 
-        System.out.println("Hello CodeMentorAI");
+        
 
     }
+
 }`
-    );
 
-  const [output, setOutput] =
-    useState("");
+);
 
-  const [language, setLanguage] =
-    useState("Java");
+const[
 
-  useEffect(() => {
+language
 
-    loadProblem();
+]=
 
-  }, []);
+useState(
 
-  const loadProblem = async () => {
+"Java"
 
-    try {
+);
 
-      const response =
-        await api.get(
-          `/api/problems/${id}`
-        );
+const[
 
-      setProblem(
-        response.data
-      );
+output,
 
-    } catch (error) {
+setOutput
 
-      console.log(error);
-    }
-  };
+]=
 
-  const runCode = async () => {
+useState("");
 
-    try {
+useEffect(()=>{
 
-      const response =
-        await api.post(
-          "/api/code/run",
-          {
-            code
-          }
-        );
+loadProblem();
 
-      setOutput(
-        response.data.output
-      );
+},[]);
 
-    } catch (error) {
+const loadProblem=
 
-      console.log(error);
+async()=>{
 
-      setOutput(
-        "Execution Failed"
-      );
-    }
-  };
+try{
 
-  const submitSolution =
-    async () => {
+const response=
 
-      try {
+await api.get(
 
-        await api.post(
-          `/api/submissions/${id}`,
-          {
-            code,
-            language,
-            status: "SOLVED"
-          }
-        );
+`/api/problems/${id}`
 
-        alert(
-          "Solution Submitted Successfully!"
-        );
+);
 
-      } catch (error) {
+setProblem(
 
-        console.log(error);
+response.data
 
-        alert(
-          "Submission Failed"
-        );
-      }
-    };
+);
 
-  if (!problem) {
+}
 
-    return (
-      <h2 className="m-4">
-        Loading...
-      </h2>
-    );
-  }
+catch(error){
 
-  return (
+console.log(error);
 
-    <div
-      className="container-fluid mt-3"
-    >
+}
 
-      <div className="row">
+};
 
-        <div
-          className="col-md-5"
-        >
+const runCode=
 
-          <div
-            className="card shadow h-100"
-          >
+async()=>{
 
-            <div
-              className="card-body"
-            >
+try{
 
-              <h2>
-                {problem.title}
-              </h2>
+const response=
 
-              <hr />
-
-              <p>
+await api.post(
 
-                <span
-                  className="badge bg-primary"
-                >
-                  {problem.difficulty}
-                </span>
+"/api/compiler/run",
 
-                {" "}
+{
 
-                <span
-                  className="badge bg-secondary"
-                >
-                  {problem.tag}
-                </span>
+language,
 
-              </p>
+code
 
-              <hr />
+}
 
-              <h5>
-                Description
-              </h5>
+);
 
-              <p>
-                {problem.description}
-              </p>
+setOutput(
 
-            </div>
+response.data.output
 
-          </div>
+);
 
-        </div>
+}
 
-        <div
-          className="col-md-7"
-        >
+catch(error){
 
-          <div
-            className="card shadow"
-          >
+console.log(error);
 
-            <div
-              className="card-body"
-            >
+setOutput(
 
-              <div
-                className="d-flex justify-content-between mb-3"
-              >
+"Compilation Failed."
 
-                <h4>
-                  Code Editor
-                </h4>
+);
 
-                <select
-                  className="form-select w-auto"
-                  value={language}
-                  onChange={(e) =>
-                    setLanguage(
-                      e.target.value
-                    )
-                  }
-                >
+}
 
-                  <option>
-                    Java
-                  </option>
+};
 
-                </select>
+const submitCode=
 
-              </div>
+async()=>{
 
-              <Editor
-                height="500px"
-                defaultLanguage="java"
-                value={code}
-                theme="vs-dark"
-                onChange={(value) =>
-                  setCode(value)
-                }
-              />
+try{
 
-              <div
-                className="mt-3"
-              >
+await api.post(
 
-                <button
-                  className="btn btn-success me-2"
-                  onClick={runCode}
-                >
-                  Run Code
-                </button>
+`/api/submissions/${id}`,
 
-                <button
-                  className="btn btn-primary"
-                  onClick={submitSolution}
-                >
-                  Submit Solution
-                </button>
+{
 
-              </div>
+code,
 
-              <hr />
+language,
 
-              <h5>
-                Output Console
-              </h5>
+status:"PENDING"
 
-              <pre
-                style={{
-                  backgroundColor:
-                    "#111",
+}
 
-                  color:
-                    "#00ff00",
+);
 
-                  minHeight:
-                    "150px",
+alert(
 
-                  padding:
-                    "15px",
+"Solution Submitted!"
 
-                  borderRadius:
-                    "10px"
-                }}
-              >
+);
 
-                {output}
+}
 
-              </pre>
+catch(error){
 
-            </div>
+console.log(error);
 
-          </div>
+}
 
-        </div>
+};
 
-      </div>
+if(!problem){
 
-    </div>
-  );
+return<Loader/>;
+
+}
+
+return(
+
+<div className="space-y-8">
+
+<div>
+
+<h1 className="text-4xl font-bold">
+
+{problem.title}
+
+</h1>
+
+<div className="flex gap-3 mt-4">
+
+<Badge color="green">
+
+{problem.difficulty}
+
+</Badge>
+
+<Badge color="blue">
+
+{problem.tag}
+
+</Badge>
+
+</div>
+
+<p className="mt-8 text-zinc-300 leading-8">
+
+{problem.description}
+
+</p>
+
+</div>
+
+<div className="grid grid-cols-2 gap-8">
+
+<div>
+
+<TestCasePanel/>
+
+</div>
+
+<div>
+
+<CodeEditor
+
+language={language}
+
+code={code}
+
+setCode={setCode}
+
+/>
+
+<div className="flex gap-4 mt-6">
+
+<Button
+
+onClick={runCode}
+
+>
+
+Run Code
+
+</Button>
+
+<Button
+
+variant="success"
+
+onClick={submitCode}
+
+>
+
+Submit
+
+</Button>
+
+</div>
+
+</div>
+
+</div>
+
+<Console
+
+output={output}
+
+/>
+
+</div>
+
+);
+
 }
 
 export default ProblemDetails;
