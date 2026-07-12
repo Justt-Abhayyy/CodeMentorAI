@@ -33,6 +33,7 @@ public class SecurityConfig {
             HttpSecurity http) throws Exception {
 
         http
+
                 .cors(Customizer.withDefaults())
 
                 .csrf(csrf -> csrf.disable())
@@ -42,15 +43,26 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
-        "/api/users/login",
-        "/api/users/register",
-        "/api/hello",
-        "/api/code/run"
-)
+
+                                "/api/users/login",
+                                "/api/users/register",
+                                "/api/hello",
+
+                                "/api/code/run",
+                                "/api/compiler/run",
+
+                                "/api/ai/**"
+
+                        )
+
                         .permitAll()
+
                         .anyRequest()
+
                         .authenticated()
+
                 )
 
                 .httpBasic(Customizer.withDefaults())
@@ -58,11 +70,15 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
 
                 .addFilterBefore(
+
                         jwtAuthenticationFilter,
+
                         UsernamePasswordAuthenticationFilter.class
+
                 );
 
         return http.build();
+
     }
 
     @Bean
@@ -72,21 +88,31 @@ public class SecurityConfig {
                 new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+
+                List.of(
+                        "http://localhost:5173"
+                )
+
         );
 
         configuration.setAllowedMethods(
+
                 List.of(
+
                         "GET",
                         "POST",
                         "PUT",
                         "DELETE",
                         "OPTIONS"
+
                 )
+
         );
 
         configuration.setAllowedHeaders(
+
                 List.of("*")
+
         );
 
         configuration.setAllowCredentials(true);
@@ -95,10 +121,15 @@ public class SecurityConfig {
                 new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration(
+
                 "/**",
+
                 configuration
+
         );
 
         return source;
+
     }
+
 }

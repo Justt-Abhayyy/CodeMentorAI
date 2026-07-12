@@ -10,23 +10,23 @@ return(
 
 <Card>
 
-<div className="flex justify-between items-center mb-5">
+<div className="flex justify-between mb-5">
 
-<h2 className="text-xl font-bold">
+<h2 className="text-2xl font-bold">
 
-Console
+Terminal
 
 </h2>
 
-<div className="text-green-400">
+<span className="text-green-400">
 
 Ready
 
-</div>
+</span>
 
 </div>
 
-<pre
+<div
 
 className="
 
@@ -34,27 +34,37 @@ bg-black
 
 rounded-2xl
 
+border
+
+border-zinc-800
+
 p-6
 
-text-green-400
-
-min-h-[220px]
+min-h-[250px]
 
 overflow-auto
+
+font-mono
+
+text-green-400
 
 "
 
 >
 
+<pre className="whitespace-pre-wrap">
+
 {
 
 output ||
 
-"Run your solution to see output..."
+"Waiting for execution..."
 
 }
 
 </pre>
+
+</div>
 
 </Card>
 

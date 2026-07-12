@@ -1,90 +1,173 @@
+import { useEffect, useState } from "react";
+
 import {
+  Bell,
+  Search,
+  UserCircle
+} from "lucide-react";
 
-Bell,
+import api from "../../services/api";
 
-Search,
+function Topbar() {
 
-UserCircle
+  const [user, setUser] = useState(null);
 
-}
+  useEffect(() => {
 
-from "lucide-react";
+    loadProfile();
 
-function Topbar(){
+  }, []);
 
-return(
+  const loadProfile = async () => {
 
-<header
+    try {
 
-className="h-20 border-b border-zinc-800 bg-zinc-950 px-8 flex items-center justify-between"
+      const response =
+        await api.get("/api/users/me");
 
->
+      setUser(response.data);
 
-<div
+    }
 
-className="flex items-center bg-zinc-900 rounded-2xl px-5 py-3 w-[420px]"
+    catch (error) {
 
->
+      console.log(error);
 
-<Search
+    }
 
-size={18}
+  };
 
-className="text-zinc-500"
+  return (
 
-/>
+    <header
+      className="
+        h-20
+        border-b
+        border-zinc-800
+        bg-zinc-950
+        px-8
+        flex
+        items-center
+        justify-between
+      "
+    >
 
-<input
+      <div
+        className="
+          flex
+          items-center
+          bg-zinc-900
+          rounded-2xl
+          px-5
+          py-3
+          w-[420px]
+        "
+      >
 
-placeholder="Search..."
+        <Search
+          size={18}
+          className="text-zinc-500"
+        />
 
-className="bg-transparent ml-4 outline-none w-full"
+        <input
 
-/>
+          placeholder="Search problems..."
 
-</div>
+          className="
+            bg-transparent
+            ml-4
+            outline-none
+            w-full
+            text-white
+          "
 
-<div className="flex items-center gap-6">
+        />
 
-<button>
+      </div>
 
-<Bell/>
+      <div className="flex items-center gap-8">
 
-</button>
+        <button
+          className="
+            hover:text-blue-500
+            transition
+          "
+        >
 
-<div className="flex items-center gap-3">
+          <Bell size={22} />
 
-<UserCircle
+        </button>
 
-size={42}
+        <div
+          className="
+            flex
+            items-center
+            gap-4
+          "
+        >
 
-className="text-blue-500"
+          <UserCircle
+            size={48}
+            className="text-blue-500"
+          />
 
-/>
+          <div>
 
-<div>
+            <h3
+              className="
+                font-semibold
+                text-lg
+              "
+            >
 
-<h3 className="font-semibold">
+              {
 
-Welcome
+                user
 
-</h3>
+                  ?
 
-<p className="text-zinc-500 text-sm">
+                  user.name
 
-CodeMentorAI
+                  :
 
-</p>
+                  "Loading..."
 
-</div>
+              }
 
-</div>
+            </h3>
 
-</div>
+            <p
+              className="
+                text-zinc-500
+                text-sm
+              "
+            >
 
-</header>
+              {
 
-);
+                user
+
+                  ?
+
+                  user.email
+
+                  :
+
+                  ""
+
+              }
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+  );
 
 }
 

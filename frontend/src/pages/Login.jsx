@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import api from "../services/api";
 
@@ -26,44 +27,37 @@ function Login() {
     try {
 
       const response = await api.post(
-
         "/api/users/login",
-
         {
-
           email,
-
-          password
-
+          password,
         }
-
       );
 
       if (response.data.token) {
 
         localStorage.setItem(
-
           "token",
-
           response.data.token
-
         );
+
+        toast.success("Welcome back!");
 
         navigate("/dashboard");
 
+      } else {
+
+        toast.error("Invalid credentials.");
+
       }
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
       console.log(error);
 
-      alert("Invalid email or password.");
+      toast.error("Login failed.");
 
-    }
-
-    finally {
+    } finally {
 
       setLoading(false);
 
@@ -73,67 +67,57 @@ function Login() {
 
   return (
 
-    <div className="min-h-screen bg-zinc-950 flex justify-center items-center p-8">
+    <div className="min-h-screen bg-zinc-950 flex justify-center items-center px-6">
 
       <Card className="w-full max-w-md">
 
-        <h1 className="text-4xl font-bold mb-8">
+        <h1 className="text-4xl font-bold mb-2">
 
           Welcome Back 👋
 
         </h1>
 
+        <p className="text-zinc-400 mb-8">
+
+          Login to continue coding.
+
+        </p>
+
         <form
-
           onSubmit={handleLogin}
-
           className="space-y-5"
-
         >
 
           <Input
-
             type="email"
-
             placeholder="Email"
-
             value={email}
-
             onChange={(e)=>setEmail(e.target.value)}
-
           />
 
           <Input
-
             type="password"
-
             placeholder="Password"
-
             value={password}
-
             onChange={(e)=>setPassword(e.target.value)}
-
           />
 
           <Button
-
             className="w-full"
-
             disabled={loading}
-
           >
 
             {
 
               loading
 
-              ?
+                ?
 
-              "Signing In..."
+                "Signing In..."
 
-              :
+                :
 
-              "Login"
+                "Login"
 
             }
 
@@ -146,11 +130,8 @@ function Login() {
           Don't have an account?
 
           <Link
-
             to="/register"
-
-            className="text-blue-400 ml-2"
-
+            className="text-blue-500 ml-2 hover:underline"
           >
 
             Register

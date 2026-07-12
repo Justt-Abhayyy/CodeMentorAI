@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 
 import api from "../services/api";
 
+import Loader from "../components/ui/Loader";
+
 import DashboardStats from "../components/dashboard/DashboardStats";
-import ActivityCard from "../components/dashboard/ActivityCard";
 import QuickActions from "../components/dashboard/QuickActions";
 import RecentSubmissions from "../components/dashboard/RecentSubmissions";
+import ActivityCard from "../components/dashboard/ActivityCard";
 
 import ProblemsSolvedChart from "../components/charts/ProblemsSolvedChart";
 import LanguageChart from "../components/charts/LanguageChart";
 
 import Card from "../components/ui/Card";
-import Loader from "../components/ui/Loader";
 
 function Dashboard() {
 
-  const [dashboard, setDashboard] =
-    useState(null);
+  const [dashboard, setDashboard] = useState(null);
 
   useEffect(() => {
 
@@ -29,17 +29,16 @@ function Dashboard() {
     try {
 
       const response =
-        await api.get(
-          "/api/dashboard"
-        );
+        await api.get("/api/dashboard");
 
-      setDashboard(
-        response.data
-      );
+      setDashboard(response.data);
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.log(error);
+
     }
 
   };
@@ -52,84 +51,47 @@ function Dashboard() {
 
   return (
 
-    <div
-      className="
-        space-y-8
-      "
-    >
+    <div className="space-y-10">
 
       <div>
 
-        <h1
-          className="
-            text-4xl
-            font-bold
-          "
-        >
+        <h1 className="text-5xl font-bold">
 
-          Welcome Back 👋
+          Dashboard
 
         </h1>
 
-        <p
-          className="
-            text-zinc-400
-            mt-2
-          "
-        >
+        <p className="text-zinc-500 mt-3">
 
-          Track your coding journey.
+          Welcome back. Here's your coding progress.
 
         </p>
 
       </div>
 
-      <DashboardStats
-        dashboard={dashboard}
-      />
+      <DashboardStats dashboard={dashboard} />
 
       <QuickActions />
 
-      <div
-        className="
-          grid
-          grid-cols-1
-          xl:grid-cols-2
-          gap-6
-        "
-      >
+      <div className="grid xl:grid-cols-2 gap-8">
 
         <Card>
 
-          <h2
-            className="
-              text-xl
-              mb-6
-              font-semibold
-            "
-          >
+          <h2 className="text-2xl font-bold mb-6">
 
             Problems Solved
 
           </h2>
 
-          <ProblemsSolvedChart
-            dashboard={dashboard}
-          />
+          <ProblemsSolvedChart dashboard={dashboard} />
 
         </Card>
 
         <Card>
 
-          <h2
-            className="
-              text-xl
-              mb-6
-              font-semibold
-            "
-          >
+          <h2 className="text-2xl font-bold mb-6">
 
-            Languages
+            Languages Used
 
           </h2>
 
@@ -139,14 +101,7 @@ function Dashboard() {
 
       </div>
 
-      <div
-        className="
-          grid
-          grid-cols-1
-          xl:grid-cols-2
-          gap-6
-        "
-      >
+      <div className="grid xl:grid-cols-2 gap-8">
 
         <RecentSubmissions />
 

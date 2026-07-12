@@ -1,26 +1,24 @@
 import {
 
-useEffect,
+  useEffect,
 
-useState
+  useState
 
-}
-
-from "react";
+} from "react";
 
 import {
 
-useParams
+  useParams
 
-}
+} from "react-router-dom";
 
-from "react-router-dom";
+import toast from "react-hot-toast";
 
 import api from "../services/api";
 
-import Button from "../components/ui/Button";
-
 import Badge from "../components/ui/Badge";
+
+import Button from "../components/ui/Button";
 
 import Loader from "../components/ui/Loader";
 
@@ -30,37 +28,33 @@ import Console from "../components/problems/Console";
 
 import TestCasePanel from "../components/problems/TestCasePanel";
 
-function ProblemDetails(){
+import AIReviewPanel from "../components/ai/AIReviewPanel";
 
-const{
+function ProblemDetails() {
 
-id
+  const { id } = useParams();
 
-}=
+  const [
 
-useParams();
+    problem,
 
-const[
+    setProblem
 
-problem,
+  ] = useState(null);
 
-setProblem
+  const [
 
-]=
+    language
 
-useState(null);
+  ] = useState("Java");
 
-const[
+  const [
 
-code,
+    code,
 
-setCode
+    setCode
 
-]=
-
-useState(
-
-`public class Main {
+  ] = useState(`public class Main {
 
     public static void main(String[] args){
 
@@ -68,251 +62,259 @@ useState(
 
     }
 
-}`
+}`);
 
-);
+  const [
 
-const[
+    output,
 
-language
+    setOutput
 
-]=
+  ] = useState("");
 
-useState(
+  useEffect(() => {
 
-"Java"
+    loadProblem();
 
-);
+  }, []);
 
-const[
+  const loadProblem = async () => {
 
-output,
+    try {
 
-setOutput
+      const response = await api.get(
 
-]=
+        `/api/problems/${id}`
 
-useState("");
+      );
 
-useEffect(()=>{
+      setProblem(response.data);
 
-loadProblem();
+    }
 
-},[]);
+    catch (error) {
 
-const loadProblem=
+      console.log(error);
 
-async()=>{
+    }
 
-try{
+  };
 
-const response=
+  const runCode = async () => {
 
-await api.get(
+    try {
 
-`/api/problems/${id}`
+      toast.loading(
 
-);
+        "Running Code...",
 
-setProblem(
+        {
 
-response.data
+          id: "run"
 
-);
+        }
 
-}
+      );
 
-catch(error){
+      const response = await api.post(
 
-console.log(error);
+        "/api/code/run",
 
-}
+        {
 
-};
+          language,
 
-const runCode=
+          code
 
-async()=>{
+        }
 
-try{
+      );
 
-const response=
+      toast.success(
 
-await api.post(
+        "Execution Complete",
 
-"/api/compiler/run",
+        {
 
-{
+          id: "run"
 
-language,
+        }
 
-code
+      );
 
-}
+      setOutput(
 
-);
+        response.data.output
 
-setOutput(
+      );
 
-response.data.output
+    }
 
-);
+    catch (error) {
 
-}
+      console.log(error);
 
-catch(error){
+      toast.error(
 
-console.log(error);
+        "Compilation Failed",
 
-setOutput(
+        {
 
-"Compilation Failed."
+          id: "run"
 
-);
+        }
 
-}
+      );
 
-};
+      setOutput("Compilation Failed.");
 
-const submitCode=
+    }
 
-async()=>{
+  };
 
-try{
+  const submitCode = async () => {
 
-await api.post(
+    try {
 
-`/api/submissions/${id}`,
+      await api.post(
 
-{
+        `/api/submissions/${id}`,
 
-code,
+        {
 
-language,
+          code,
 
-status:"PENDING"
+          language,
 
-}
+          status: "PENDING"
 
-);
+        }
 
-alert(
+      );
 
-"Solution Submitted!"
+      toast.success(
 
-);
+        "Solution Submitted Successfully"
 
-}
+      );
 
-catch(error){
+    }
 
-console.log(error);
+    catch (error) {
 
-}
+      console.log(error);
 
-};
+      toast.error(
 
-if(!problem){
+        "Submission Failed"
 
-return<Loader/>;
+      );
 
-}
+    }
 
-return(
+  };
 
-<div className="space-y-8">
+  if (!problem) {
 
-<div>
+    return <Loader />;
 
-<h1 className="text-4xl font-bold">
+  }
 
-{problem.title}
+  return (
 
-</h1>
+    <div className="space-y-8">
 
-<div className="flex gap-3 mt-4">
+      <div>
 
-<Badge color="green">
+        <h1 className="text-4xl font-bold">
 
-{problem.difficulty}
+          {problem.title}
 
-</Badge>
+        </h1>
 
-<Badge color="blue">
+        <div className="flex gap-3 mt-4">
 
-{problem.tag}
+          <Badge color="green">
 
-</Badge>
+            {problem.difficulty}
 
-</div>
+          </Badge>
 
-<p className="mt-8 text-zinc-300 leading-8">
+          <Badge>
 
-{problem.description}
+            {problem.tag}
 
-</p>
+          </Badge>
 
-</div>
+        </div>
 
-<div className="grid grid-cols-2 gap-8">
+        <p className="mt-6 text-zinc-300 leading-8">
 
-<div>
+          {problem.description}
 
-<TestCasePanel/>
+        </p>
 
-</div>
+      </div>
 
-<div>
+      <div className="grid xl:grid-cols-2 gap-8">
 
-<CodeEditor
+        <div className="space-y-6">
 
-language={language}
+          <TestCasePanel />
 
-code={code}
+          <Console output={output} />
 
-setCode={setCode}
+        </div>
 
-/>
+        <div className="space-y-6">
 
-<div className="flex gap-4 mt-6">
+          <CodeEditor
 
-<Button
+            language={language}
 
-onClick={runCode}
+            code={code}
 
->
+            setCode={setCode}
 
-Run Code
+          />
 
-</Button>
+          <div className="flex gap-4">
 
-<Button
+            <Button onClick={runCode}>
 
-variant="success"
+              ▶ Run Code
 
-onClick={submitCode}
+            </Button>
 
->
+            <Button
 
-Submit
+              variant="success"
 
-</Button>
+              onClick={submitCode}
 
-</div>
+            >
 
-</div>
+              ✓ Submit
 
-</div>
+            </Button>
 
-<Console
+          </div>
 
-output={output}
+        </div>
 
-/>
+      </div>
 
-</div>
+      <AIReviewPanel
 
-);
+        code={code}
+
+        language={language}
+
+      />
+
+    </div>
+
+  );
 
 }
 

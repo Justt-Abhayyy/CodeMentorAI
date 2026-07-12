@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 
 import Loader from "../components/ui/Loader";
-
 import Card from "../components/ui/Card";
 
 function Profile() {
@@ -20,11 +19,14 @@ function Profile() {
 
     try {
 
-      const response = await api.get("/api/users/me");
+      const response =
+        await api.get("/api/users/me");
 
       setProfile(response.data);
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
       console.log(error);
 
@@ -40,67 +42,71 @@ function Profile() {
 
   return (
 
-    <Card className="max-w-xl">
+    <div className="max-w-3xl">
 
-      <h1 className="text-4xl font-bold mb-8">
+      <Card>
 
-        My Profile
+        <h1 className="text-4xl font-bold mb-8">
 
-      </h1>
+          My Profile
 
-      <div className="space-y-6">
+        </h1>
 
-        <div>
+        <div className="grid gap-6">
 
-          <h4 className="text-zinc-500">
+          <div>
 
-            Name
+            <h4 className="text-zinc-500">
 
-          </h4>
+              Full Name
 
-          <h2 className="text-2xl">
+            </h4>
 
-            {profile.name}
+            <h2 className="text-2xl mt-2">
 
-          </h2>
+              {profile.name}
+
+            </h2>
+
+          </div>
+
+          <div>
+
+            <h4 className="text-zinc-500">
+
+              Email
+
+            </h4>
+
+            <h2 className="text-2xl mt-2">
+
+              {profile.email}
+
+            </h2>
+
+          </div>
+
+          <div>
+
+            <h4 className="text-zinc-500">
+
+              User ID
+
+            </h4>
+
+            <h2 className="text-2xl mt-2">
+
+              #{profile.id}
+
+            </h2>
+
+          </div>
 
         </div>
 
-        <div>
+      </Card>
 
-          <h4 className="text-zinc-500">
-
-            Email
-
-          </h4>
-
-          <h2 className="text-2xl">
-
-            {profile.email}
-
-          </h2>
-
-        </div>
-
-        <div>
-
-          <h4 className="text-zinc-500">
-
-            User ID
-
-          </h4>
-
-          <h2 className="text-2xl">
-
-            {profile.id}
-
-          </h2>
-
-        </div>
-
-      </div>
-
-    </Card>
+    </div>
 
   );
 
