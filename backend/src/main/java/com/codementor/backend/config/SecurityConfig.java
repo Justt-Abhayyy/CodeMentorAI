@@ -49,15 +49,11 @@ public class SecurityConfig {
                                 "/api/users/login",
                                 "/api/users/register",
                                 "/api/hello",
-
                                 "/api/code/run",
                                 "/api/compiler/run",
-
                                 "/api/ai/**"
 
-                        )
-
-                        .permitAll()
+                        ).permitAll()
 
                         .anyRequest()
 
@@ -65,7 +61,7 @@ public class SecurityConfig {
 
                 )
 
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(httpBasic -> httpBasic.disable())
 
                 .formLogin(form -> form.disable())
 
@@ -90,7 +86,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(
 
                 List.of(
-                        "http://localhost:5173"
+                        "http://localhost:5173",
+                        "https://your-vercel-domain.vercel.app"
                 )
 
         );
