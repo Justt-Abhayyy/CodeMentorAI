@@ -5,31 +5,23 @@ const api = axios.create({
   baseURL: "https://codementorai-1-hdhx.onrender.com",
 
   headers: {
-
     "Content-Type": "application/json"
-
   }
 
 });
 
-api.interceptors.request.use(
+api.interceptors.request.use((config) => {
 
-  (config) => {
+  const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token");
+  if (token) {
 
-    if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
 
-      config.headers.Authorization = `Bearer ${token}`;
+  }
 
-    }
+  return config;
 
-    return config;
-
-  },
-
-  (error) => Promise.reject(error)
-
-);
+});
 
 export default api;
