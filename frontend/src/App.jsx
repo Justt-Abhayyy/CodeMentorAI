@@ -199,11 +199,15 @@ path="/admin/problems"
 
 element={
 
+<ProtectedRoute adminOnly={true}>
+
 <Layout>
 
 <AdminProblems/>
 
 </Layout>
+
+</ProtectedRoute>
 
 }
 

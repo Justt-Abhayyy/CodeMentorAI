@@ -15,9 +15,13 @@ function Sidebar() {
 
   const navigate = useNavigate();
 
+  const isAdmin =
+    localStorage.getItem("isAdmin") === "true";
+
   const logout = () => {
 
     localStorage.removeItem("token");
+    localStorage.removeItem("isAdmin");
 
     navigate("/login");
 
@@ -59,15 +63,23 @@ function Sidebar() {
       title: "Profile",
       path: "/profile",
       icon: User
-    },
-
-    {
-      title: "Admin",
-      path: "/admin/problems",
-      icon: ShieldCheck
     }
 
   ];
+
+  if (isAdmin) {
+
+    menu.push({
+
+      title: "Admin",
+
+      path: "/admin/problems",
+
+      icon: ShieldCheck
+
+    });
+
+  }
 
   return (
 
@@ -93,11 +105,11 @@ function Sidebar() {
 
         {
 
-          menu.map(item=>{
+          menu.map(item => {
 
-            const Icon=item.icon;
+            const Icon = item.icon;
 
-            return(
+            return (
 
               <NavLink
 
@@ -105,47 +117,47 @@ function Sidebar() {
 
                 to={item.path}
 
-                className={({isActive})=>
+                className={({ isActive }) =>
 
-                `
+                  `
 
-                flex
+                  flex
 
-                items-center
+                  items-center
 
-                gap-4
+                  gap-4
 
-                px-5
+                  px-5
 
-                py-4
+                  py-4
 
-                rounded-2xl
+                  rounded-2xl
 
-                transition
+                  transition
 
-                duration-300
+                  duration-300
 
-                ${
+                  ${
 
-                  isActive
+                    isActive
 
-                  ?
+                      ?
 
-                  "bg-blue-600 text-white"
+                      "bg-blue-600 text-white"
 
-                  :
+                      :
 
-                  "hover:bg-zinc-900 text-zinc-400 hover:text-white"
+                      "hover:bg-zinc-900 text-zinc-400 hover:text-white"
 
-                }
+                  }
 
-                `
+                  `
 
                 }
 
               >
 
-                <Icon size={20}/>
+                <Icon size={20} />
 
                 {item.title}
 
@@ -169,7 +181,7 @@ function Sidebar() {
 
         >
 
-          <LogOut size={18}/>
+          <LogOut size={18} />
 
           Logout
 

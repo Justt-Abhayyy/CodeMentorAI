@@ -8,6 +8,8 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 
+const ADMIN_EMAIL = "Codementorr@gmail.com";
+
 function Login() {
 
   const navigate = useNavigate();
@@ -27,37 +29,75 @@ function Login() {
     try {
 
       const response = await api.post(
+
         "/api/users/login",
+
         {
+
           email,
-          password,
+
+          password
+
         }
+
       );
 
-      if (response.data.token) {
+      if(response.data.token){
 
         localStorage.setItem(
+
           "token",
+
           response.data.token
+
         );
 
-        toast.success("Welcome back!");
+        const enteredEmail = email.trim().toLowerCase();
+const adminEmail = ADMIN_EMAIL.trim().toLowerCase();
+
+console.log("Entered Email:", enteredEmail);
+console.log("Admin Email:", adminEmail);
+console.log("Match:", enteredEmail === adminEmail);
+
+localStorage.setItem(
+  "isAdmin",
+  enteredEmail === adminEmail ? "true" : "false"
+);
+        toast.success(
+
+          "Login Successful"
+
+        );
 
         navigate("/dashboard");
 
-      } else {
+      }
 
-        toast.error("Invalid credentials.");
+      else{
+
+        toast.error(
+
+          "Invalid Credentials"
+
+        );
 
       }
 
-    } catch (error) {
+    }
+
+    catch(error){
 
       console.log(error);
 
-      toast.error("Login failed.");
+      toast.error(
 
-    } finally {
+        "Login Failed"
+
+      );
+
+    }
+
+    finally{
 
       setLoading(false);
 
@@ -65,7 +105,7 @@ function Login() {
 
   };
 
-  return (
+  return(
 
     <div className="min-h-screen bg-zinc-950 flex justify-center items-center px-6">
 
@@ -79,45 +119,69 @@ function Login() {
 
         <p className="text-zinc-400 mb-8">
 
-          Login to continue coding.
+          Login to continue coding
 
         </p>
 
         <form
+
           onSubmit={handleLogin}
+
           className="space-y-5"
+
         >
 
           <Input
+
             type="email"
+
             placeholder="Email"
+
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+
+            onChange={(e)=>
+
+              setEmail(e.target.value)
+
+            }
+
           />
 
           <Input
+
             type="password"
+
             placeholder="Password"
+
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+
+            onChange={(e)=>
+
+              setPassword(e.target.value)
+
+            }
+
           />
 
           <Button
+
             className="w-full"
+
             disabled={loading}
+
           >
 
             {
 
               loading
 
-                ?
+              ?
 
-                "Signing In..."
+              "Signing In..."
 
-                :
+              :
 
-                "Login"
+              "Login"
 
             }
 
@@ -125,13 +189,16 @@ function Login() {
 
         </form>
 
-        <p className="mt-8 text-center text-zinc-400">
+        <p className="mt-8 text-center text-zinc-500">
 
           Don't have an account?
 
           <Link
+
             to="/register"
-            className="text-blue-500 ml-2 hover:underline"
+
+            className="ml-2 text-blue-500"
+
           >
 
             Register

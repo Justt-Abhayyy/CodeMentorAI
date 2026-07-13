@@ -3,13 +3,20 @@ package com.codementor.backend.controller;
 import com.codementor.backend.entity.Problem;
 import com.codementor.backend.service.ProblemService;
 import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/problems")
 public class ProblemController {
+
+    private static final String ADMIN_EMAIL =
+            "Codementorr@gmail.com";
 
     private final ProblemService problemService;
 
@@ -21,7 +28,12 @@ public class ProblemController {
 
     @PostMapping
     public Problem createProblem(
+
+            Authentication authentication,
+
             @Valid @RequestBody Problem problem) {
+
+        validateAdmin(authentication);
 
         return problemService.createProblem(problem);
     }
@@ -41,8 +53,14 @@ public class ProblemController {
 
     @PutMapping("/{id}")
     public Problem updateProblem(
+
+            Authentication authentication,
+
             @PathVariable Long id,
+
             @Valid @RequestBody Problem problem) {
+
+        validateAdmin(authentication);
 
         return problemService.updateProblem(
                 id,
@@ -52,10 +70,47 @@ public class ProblemController {
 
     @DeleteMapping("/{id}")
     public String deleteProblem(
+
+            Authentication authentication,
+
             @PathVariable Long id) {
+
+        validateAdmin(authentication);
 
         problemService.deleteProblem(id);
 
         return "Problem deleted successfully";
     }
+
+    private void validateAdmin(
+        Authentication authentication) {
+
+    if (authentication == null) {
+
+        throw new ResponseStatusException(
+
+                HttpStatus.UNAUTHORIZED,
+
+                "Authentication Required"
+
+        );
+
+    }
+
+    String email = authentication.getName();
+
+    if (!ADMIN_EMAIL.equalsIgnoreCase(email)) {
+
+        throw new ResponseStatusException(
+
+                HttpStatus.FORBIDDEN,
+
+                "Admin Access Required"
+
+        );
+
+    }
+
+}
+
 }
