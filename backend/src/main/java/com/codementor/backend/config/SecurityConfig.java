@@ -83,14 +83,16 @@ public class SecurityConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
+       configuration.setAllowedOrigins(
 
-                List.of(
-                        "http://localhost:5173",
-                        "https://your-vercel-domain.vercel.app"
-                )
+    List.of(
 
-        );
+        "http://localhost:5173",
+        "https://code-mentor-ai-psi.vercel.app"
+
+    )
+
+);
 
         configuration.setAllowedMethods(
 
