@@ -8,7 +8,7 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 
-const ADMIN_EMAIL = "Codementorr@gmail.com";
+const ADMIN_EMAIL = "codementoradmin@gmail.com";
 
 function Login() {
 
@@ -24,80 +24,81 @@ function Login() {
 
     e.preventDefault();
 
+    console.log("========== LOGIN ATTEMPT ==========");
+    console.log("EMAIL:", email);
+    console.log("PASSWORD:", password);
+
     setLoading(true);
 
     try {
 
       const response = await api.post(
-
         "/api/users/login",
-
         {
-
-          email,
-
-          password
-
+          email: email.trim(),
+          password: password.trim()
         }
-
       );
 
-      if(response.data.token){
+      console.log("LOGIN RESPONSE:", response.data);
+
+      if (response.data.token) {
 
         localStorage.setItem(
-
           "token",
-
           response.data.token
-
         );
 
-        const enteredEmail = email.trim().toLowerCase();
-const adminEmail = ADMIN_EMAIL.trim().toLowerCase();
+        const enteredEmail =
+          email.trim().toLowerCase();
 
-console.log("Entered Email:", enteredEmail);
-console.log("Admin Email:", adminEmail);
-console.log("Match:", enteredEmail === adminEmail);
+        const adminEmail =
+          ADMIN_EMAIL.trim().toLowerCase();
 
-localStorage.setItem(
-  "isAdmin",
-  enteredEmail === adminEmail ? "true" : "false"
-);
-        toast.success(
+        console.log("Entered Email:", enteredEmail);
+        console.log("Admin Email:", adminEmail);
+        console.log("Admin Match:", enteredEmail === adminEmail);
 
-          "Login Successful"
-
+        localStorage.setItem(
+          "isAdmin",
+          enteredEmail === adminEmail
+            ? "true"
+            : "false"
         );
+
+        toast.success("Login Successful");
 
         navigate("/dashboard");
 
       }
 
-      else{
+      else {
 
-        toast.error(
-
-          "Invalid Credentials"
-
-        );
+        toast.error("Invalid Credentials");
 
       }
 
     }
 
-    catch(error){
+    catch (error) {
 
+      console.log("========== LOGIN ERROR ==========");
       console.log(error);
 
-      toast.error(
+      console.log("Status:",
+        error.response?.status);
 
-        "Login Failed"
+      console.log("Response:",
+        error.response?.data);
 
-      );
+      console.log("Request:",
+        error.config);
+
+      toast.error("Login Failed");
 
     }
 
-    finally{
+    finally {
 
       setLoading(false);
 
@@ -105,7 +106,7 @@ localStorage.setItem(
 
   };
 
-  return(
+  return (
 
     <div className="min-h-screen bg-zinc-950 flex justify-center items-center px-6">
 
@@ -124,65 +125,37 @@ localStorage.setItem(
         </p>
 
         <form
-
           onSubmit={handleLogin}
-
           className="space-y-5"
-
         >
 
           <Input
-
             type="email"
-
             placeholder="Email"
-
             value={email}
-
-            onChange={(e)=>
-
+            onChange={(e) =>
               setEmail(e.target.value)
-
             }
-
           />
 
           <Input
-
             type="password"
-
             placeholder="Password"
-
             value={password}
-
-            onChange={(e)=>
-
+            onChange={(e) =>
               setPassword(e.target.value)
-
             }
-
           />
 
           <Button
-
             className="w-full"
-
             disabled={loading}
-
           >
 
             {
-
               loading
-
-              ?
-
-              "Signing In..."
-
-              :
-
-              "Login"
-
+                ? "Signing In..."
+                : "Login"
             }
 
           </Button>
@@ -194,11 +167,8 @@ localStorage.setItem(
           Don't have an account?
 
           <Link
-
             to="/register"
-
             className="ml-2 text-blue-500"
-
           >
 
             Register
