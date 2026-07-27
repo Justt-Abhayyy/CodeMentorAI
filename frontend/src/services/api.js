@@ -14,7 +14,16 @@ api.interceptors.request.use((config) => {
 
   const token = localStorage.getItem("token");
 
-  if (token) {
+  const publicRoutes = [
+    "/api/users/login",
+    "/api/users/register"
+  ];
+
+  const isPublicRoute = publicRoutes.some(route =>
+    config.url?.includes(route)
+  );
+
+  if (token && !isPublicRoute) {
 
     config.headers.Authorization = `Bearer ${token}`;
 
